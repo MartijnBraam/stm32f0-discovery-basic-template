@@ -59,26 +59,27 @@ all: lib proj
 lib:
 	$(MAKE) -C $(STD_PERIPH_LIB)
 
-proj: 	$(PROJ_NAME).elf
+proj: 	$(CLION_EXE_DIR)/$(PROJ_NAME).elf
 
-$(PROJ_NAME).elf: $(SRCS)
+$(CLION_EXE_DIR)/$(PROJ_NAME).elf: $(SRCS)
 	$(CC) $(CFLAGS) $^ -o $@ -L$(STD_PERIPH_LIB) -lstm32f0 -L$(LDSCRIPT_INC) -Tstm32f0.ld
-	$(OBJCOPY) -O ihex $(PROJ_NAME).elf $(PROJ_NAME).hex
-	$(OBJCOPY) -O binary $(PROJ_NAME).elf $(PROJ_NAME).bin
-	$(OBJDUMP) -St $(PROJ_NAME).elf >$(PROJ_NAME).lst
-	$(SIZE) $(PROJ_NAME).elf
+	$(OBJCOPY) -O ihex $(CLION_EXE_DIR)/$(PROJ_NAME).elf $(CLION_EXE_DIR)/$(PROJ_NAME).hex
+	$(OBJCOPY) -O binary $(CLION_EXE_DIR)/$(PROJ_NAME).elf $(CLION_EXE_DIR)/$(PROJ_NAME).bin
+	$(OBJDUMP) -St $(CLION_EXE_DIR)/$(PROJ_NAME).elf >$(CLION_EXE_DIR)/$(PROJ_NAME).lst
+	$(SIZE) $(CLION_EXE_DIR)/$(PROJ_NAME).elf
 	
-program: $(PROJ_NAME).bin
-	openocd -f $(OPENOCD_BOARD_DIR)/stm32f0discovery.cfg -f $(OPENOCD_PROC_FILE) -c "stm_flash `pwd`/$(PROJ_NAME).bin" -c shutdown
+program: $(CLION_EXE_DIR)/$(PROJ_NAME).bin
+	openocd -f $(OPENOCD_BOARD_DIR)/stm32f0discovery.cfg -f $(OPENOCD_PROC_FILE) -c "stm_flash $(CLION_EXE_DIR)/$(PROJ_NAME).bin" -c shutdown
 
 clean:
 	find ./ -name '*~' | xargs rm -f	
 	rm -f *.o
-	rm -f $(PROJ_NAME).elf
-	rm -f $(PROJ_NAME).hex
-	rm -f $(PROJ_NAME).bin
-	rm -f $(PROJ_NAME).map
-	rm -f $(PROJ_NAME).lst
+	rm -f $(CLION_EXE_DIR)/$(PROJ_NAME).elf
+	rm -f $(CLION_EXE_DIR)/$(PROJ_NAME).hex
+	rm -f $(CLION_EXE_DIR)/$(PROJ_NAME).bin
+	rm -f $(CLION_EXE_DIR)/$(PROJ_NAME).map
+	rm -f $(CLION_EXE_DIR)/$(PROJ_NAME).lst
 
 reallyclean: clean
 	$(MAKE) -C $(STD_PERIPH_LIB) clean
+
